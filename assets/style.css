@@ -1,0 +1,33 @@
+body {
+    background-color: lightslategray
+}
+
+button {
+    border: none; 
+    color: rgb(253, 251, 251); 
+    padding: 14px 28px; 
+    cursor: pointer; 
+    box-shadow: 3px 3px 5px  black;
+    background-color: rgb(15, 92, 104);
+    font-weight: bold; 
+    font-size: large;
+  }
+
+  button:active {
+    box-shadow: 1px 1px 5px black;
+    transform: translateY(2px) translateX(2px);
+  }
+
+  .numbers {
+    background-color: rgb(8, 83, 170);
+  }
+
+  .operations {
+    background-color: rgb(192, 40, 20);  
+  }
+
+  .equal {
+    background-color: rgb(15, 141, 32);   
+  }
+
+
