@@ -50,9 +50,8 @@ let nineButton = document.querySelector('#calculator .nine');
 
 let calculatorArea = document.getElementById("calculator");
 
-let argument1;
-let argument2;
-let operatorValue;
+let expressionString;
+let expressionArray;
 let resultOfOperation;
 let allNumbersButtons = Array.from(document.querySelectorAll('#calculator .numbers'));
 
@@ -62,13 +61,10 @@ calculatorArea.addEventListener("click", function (e) {
 
     if ((allNumbersButtons.some(button => button == e.target)
         && field.innerHTML == "0")
-        || (allNumbersButtons.some(button => button == e.target) &&
-            field.innerHTML == resultOfOperation)
         || (allNumbersButtons.some(button => button == e.target)
-            && field.innerHTML == argument1)) {
+            && field.innerHTML == resultOfOperation)) {
         field.innerHTML = "";
     }
-
     switch (e.target) {
         case zeroButton:
             field.innerHTML += "0";
@@ -101,91 +97,50 @@ calculatorArea.addEventListener("click", function (e) {
             field.innerHTML += "9"
             break;
         case additionButton:
-            if (operatorValue == "+"
-                || operatorValue == "-"
-                || operatorValue == "/"
-                || operatorValue == "*") {
-                argument2 = field.innerHTML;
-                resultOfOperation = operate(operatorValue, Number(argument1), Number(argument2));
-                argument1 = undefined;
-                argument2 = undefined;
-                operatorValue = undefined;
-                field.innerHTML = resultOfOperation;
-                argument1 = field.innerHTML;
-                break;
-            }
-            operatorValue = "+";
-            argument1 = field.innerHTML;
+            field.innerHTML += " + ";
             break;
         case subtractionButton:
-            if (operatorValue == "+"
-                || operatorValue == "-"
-                || operatorValue == "/"
-                || operatorValue == "*") {
-                argument2 = field.innerHTML;
-                resultOfOperation = operate(operatorValue, Number(argument1), Number(argument2));
-                argument1 = undefined;
-                argument2 = undefined;
-                operatorValue = undefined;
-                field.innerHTML = resultOfOperation;
-                argument1 = field.innerHTML;
-                break;
-            }
-            operatorValue = "-";
-            argument1 = field.innerHTML;
+            field.innerHTML += " - ";
             break;
         case multiplicationButton:
-            if (operatorValue == "+"
-                || operatorValue == "-"
-                || operatorValue == "/"
-                || operatorValue == "*") {
-                argument2 = field.innerHTML;
-                resultOfOperation = operate(operatorValue, Number(argument1), Number(argument2));
-                argument1 = undefined;
-                argument2 = undefined;
-                operatorValue = undefined;
-                field.innerHTML = resultOfOperation;
-                argument1 = field.innerHTML;
-                break;
-            }
-            operatorValue = "*";
-            argument1 = field.innerHTML;
+            field.innerHTML += " * ";
             break;
         case divisionButton:
-            if (operatorValue == "+"
-                || operatorValue == "-"
-                || operatorValue == "/"
-                || operatorValue == "*") {
-                argument2 = field.innerHTML;
-                resultOfOperation = operate(operatorValue, Number(argument1), Number(argument2));
-                argument1 = undefined;
-                argument2 = undefined;
-                operatorValue = undefined;
-                field.innerHTML = resultOfOperation;
-                argument1 = field.innerHTML;
-                break;
-            }
-            operatorValue = "/";
-            argument1 = field.innerHTML;
+            field.innerHTML += " / ";
             break;
         case clearButton:
             field.innerHTML = "0";
-            argument1 = undefined;
-            argument2 = undefined;
-            operatorValue = undefined;
             break;
         case equalityButton:
-            argument2 = field.innerHTML;
-            if (argument1 == undefined || argument2 == undefined || operatorValue == undefined)  break;
-            resultOfOperation = operate(operatorValue, Number(argument1), Number(argument2));
-            argument1 = undefined;
-            argument2 = undefined;
-            operatorValue = undefined;
-            field.innerHTML = resultOfOperation;
+            let finalResult;
+            expressionString = field.innerHTML;
+            expressionArray = expressionString.split(" ");
+            for (let i = 0; i < expressionArray.length; i++) {
+                if (expressionArray[i] == "/" || expressionArray[i] == "*") {
+                    let result = operate(expressionArray[i], expressionArray[i - 1], expressionArray[i + 1])
+                    expressionArray.splice((i - 1), 3, result)
+                    i--;
+                    continue;
+                }
+            }
+            if (expressionArray.length == 1) {
+                resultOfOperation = expressionArray[0];
+                field.innerHTML = resultOfOperation;
+            }
+            else {
+                for (let i = 0; i < expressionArray.length; i++) {
+                    if (expressionArray[i] == "+" || expressionArray[i] == "-") {
+                        finalResult = operate(expressionArray[i], Number(expressionArray[i - 1]),
+                            Number(expressionArray[i + 1]));
+                        expressionArray.splice((i - 1), 3, finalResult);
+                        i--;
+                        continue;
+                    }
+                }
+                console.log(expressionArray);
+                resultOfOperation = expressionArray[0];
+                field.innerHTML = resultOfOperation;
+            }
             break;
     }
 })
-
-
-
-
